@@ -3,7 +3,7 @@ ENV CGO_ENABLED 0
 ARG BUILD_REF
 
 COPY . /service
-WORKDIR /service
+WORKDIR /service/app/services/sales-api
 RUN go build -ldflags "-X main.build=${BUILD_REF}"
 
 #run go binary  in alpine
@@ -11,9 +11,10 @@ RUN go build -ldflags "-X main.build=${BUILD_REF}"
 FROM alpine:3.15
 ARG BUILD_DATE
 ARG BUILD_REF
-COPY --from=build_sales-api /service /service
-WORKDIR /service
-CMD ["./service-3"] 
+COPY --from=build_sales-api /service/app/services/sales-api /service/sales-api
+WORKDIR /service/sales-api
+
+CMD ["./sales-api"] 
 
 LABEL org.opencontainers.image.created="${BUILD_DATE}" \
     org.opencontainers.image.title="sales-api" \
