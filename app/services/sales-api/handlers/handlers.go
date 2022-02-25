@@ -3,12 +3,14 @@ package handlers
 
 import (
 	"expvar"
+	"fmt"
 	"net/http"
 	"net/http/pprof"
 	"os"
 
 	"github.com/fd1az/service-3/app/services/sales-api/handlers/debug/checkgrp"
 	"github.com/fd1az/service-3/app/services/sales-api/handlers/testgrp"
+	"github.com/fd1az/service-3/business/web/mid"
 	"github.com/fd1az/service-3/foundation/web"
 	"go.uber.org/zap"
 )
@@ -56,7 +58,8 @@ type APIMuxConfig struct {
 
 // APIMux constructs a http.Handler with all application routes defined.
 func APIMux(cfg APIMuxConfig) *web.App {
-	app := web.NewApp(cfg.Shutdown)
+	app := web.NewApp(cfg.Shutdown, mid.Logger(cfg.Log))
+	fmt.Println("RUN")
 
 	v1(app, cfg)
 
@@ -67,8 +70,7 @@ func v1(app *web.App, cfg APIMuxConfig) {
 	const version = "v1"
 	// Register debug check endpoints.
 	tgh := testgrp.Handlers{
-
 		Log: cfg.Log,
 	}
-	app.Handle(http.MethodGet, version, "test", tgh.Test)
+	app.Handle(http.MethodGet, version, "/test", tgh.Test)
 }

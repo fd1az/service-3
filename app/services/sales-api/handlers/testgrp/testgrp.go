@@ -3,6 +3,7 @@ package testgrp
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/fd1az/service-3/foundation/web"
@@ -21,7 +22,7 @@ func (h Handlers) Test(contex context.Context, w http.ResponseWriter, r *http.Re
 	}{
 		Status: "ok",
 	}
-
+	fmt.Println("QUE ONDA")
 	statusCode := http.StatusOK
 	h.Log.Infow("readiness", "statusCode", statusCode, "method", r.Method, "path", r.URL.Path, "remoteaddr", r.RemoteAddr)
 
